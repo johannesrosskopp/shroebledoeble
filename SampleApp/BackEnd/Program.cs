@@ -48,6 +48,19 @@ app.MapGet("/weatherforecast", () =>
 
 app.Run();
 
+app.MapGet("/definitely-no-security-flaw", (HttpContext ctx) =>
+  {
+      // Intentionally vulnerable code for CodeQL testing (command injection).
+      var userinput = ctx.Request.Query["userinput"].ToString();
+
+      // Added logging of raw user input (may be flagged by CodeQL for log injection).
+      ctx.RequestServices.GetRequiredService<ILoggerFactory>()
+          .CreateLogger("TestLogger")
+          .LogInformation("Raw user input: " + userinput);
+      return Results.Ok("Logged");
+  })
+  .WithName("definitely-no-security-flaw");
+
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);

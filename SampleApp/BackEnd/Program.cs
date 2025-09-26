@@ -46,6 +46,12 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
+app.MapGet("/time", () =>
+{
+    return new { currentTime = DateTime.Now };
+})
+.WithName("GetCurrentTime");
+
 app.Run();
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
